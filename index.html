@@ -174,6 +174,84 @@
       transform: translateY(0);
     }
 
+    #opening-burst{
+
+position:fixed;
+
+inset:0;
+
+pointer-events:none;
+
+z-index:99999;
+
+overflow:hidden;
+
+}
+
+.burst-petal{
+
+position:absolute;
+
+width:12px;
+
+height:18px;
+
+background:linear-gradient(#f6d7dc,#d99cb2);
+
+border-radius:70% 70% 70% 0;
+
+transform:rotate(45deg);
+
+animation:petalBurst 1.6s ease-out forwards;
+
+}
+
+.burst-spark{
+
+position:absolute;
+
+width:4px;
+
+height:4px;
+
+border-radius:50%;
+
+background:#D4AF37;
+
+box-shadow:0 0 8px #D4AF37;
+
+animation:sparkBurst 1.2s ease-out forwards;
+
+}
+
+@keyframes petalBurst{
+
+to{
+
+transform:
+translate(var(--x),var(--y))
+rotate(var(--r));
+
+opacity:0;
+
+}
+
+}
+
+@keyframes sparkBurst{
+
+to{
+
+transform:
+translate(var(--x),var(--y))
+scale(0);
+
+opacity:0;
+
+}
+
+}
+    
     /* Wave animation for audio button */
     @keyframes pulseWave {
       0% { transform: scale(0.85); opacity: 0.8; }
@@ -628,8 +706,16 @@
     function openInvitation() {
       const container = document.querySelector('.envelope-container');
       if (container.classList.contains('is-opened')) return;
-
       container.classList.add('is-opened');
+
+setTimeout(() => {
+    createOpeningBurst();
+}, 900);
+
+// Start music automatically
+const music = document.getElementById('wedding-music');
+
+      
       
       // Start music automatically
       const music = document.getElementById('wedding-music');
@@ -729,7 +815,55 @@
       });
     }
     window.addEventListener('scroll', handleScrollReveal);
+    
+    function createOpeningBurst(){
 
+    const burst=document.createElement("div");
+
+    burst.id="opening-burst";
+
+    document.body.appendChild(burst);
+
+    for(let i=0;i<18;i++){
+
+        const petal=document.createElement("span");
+
+        petal.className="burst-petal";
+
+        petal.style.left=(48+Math.random()*4)+"%";
+        petal.style.top="50%";
+
+        petal.style.setProperty("--x",(Math.random()*260-130)+"px");
+        petal.style.setProperty("--y",(-Math.random()*220-60)+"px");
+        petal.style.setProperty("--r",(Math.random()*720-360)+"deg");
+
+        burst.appendChild(petal);
+
+    }
+
+    for(let i=0;i<28;i++){
+
+        const spark=document.createElement("span");
+
+        spark.className="burst-spark";
+
+        spark.style.left=(48+Math.random()*4)+"%";
+        spark.style.top="50%";
+
+        spark.style.setProperty("--x",(Math.random()*320-160)+"px");
+        spark.style.setProperty("--y",(Math.random()*-240)+"px");
+
+        burst.appendChild(spark);
+
+    }
+
+    setTimeout(()=>{
+
+        burst.remove();
+
+    },1800);
+
+}
     // 6. Gold embers and rose petals canvas simulation
     const canvas = document.getElementById('ambient-canvas');
     const ctx = canvas.getContext('2d');
